@@ -1,0 +1,13 @@
+# docker各種設定 アプリの使用にはWSLgが必要なため、このコンテナの起動はWSL上から行ってください
+version: "3.9"
+services: 
+  jtgame:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: jtgame
+    volumes:
+      - ..:/app
+    tty: true
+    stdin_open: true
+    command: bash

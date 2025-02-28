@@ -1,0 +1,3 @@
+https://github.com/libsdl-org/SDL/issues/11283
+コンパイルするときは、オプションでの設定を忘れずに
+g++ -o 実行ファイル名 ソース `pkg-config sdl3 --cflags --libs` 
