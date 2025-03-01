@@ -5,7 +5,7 @@ FROM ubuntu:latest
 
 # 必要なパッケージをインストール
 RUN apt update && \
-    apt install build-essential git make mingw-w64 unzip wget \
+    apt install -y build-essential git make mingw-w64 unzip wget \
     pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
     libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev \
     libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev \
