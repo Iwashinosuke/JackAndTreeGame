@@ -1,14 +1,43 @@
-https://github.com/libsdl-org/SDL/issues/11283
-コンパイルするときは、オプションでの設定を忘れずに
-g++ -o 実行ファイル名 ソース `pkg-config sdl3 --cflags --libs` 
+ビルドはcmakeで行います。ただし、WindowsとLinuxでビルドディレクトリを分けるため(キャッシュの都合)、実際の実行はbuild.shから行ってください。
+cmakeコマンドの例(今回は不使用):
+ cmake -S . -B build
+ cmake --build build
 
-開発環境上で動くようにコンパイル→  make
-Windows向けのコンパイル→         cmake
+ビルドコマンド:(chmod775権限付与をしたあと)
+    sudo ./build.sh
 
-開発環境:
+
+Windowsターゲットの場合は、
+-DBUILD_TARGET=windows
+Linuxターゲットの場合は、
+-DBUILD_TARGET=linux
+のオプションを設定してください。
+
+参考:
+https://qiita.com/iwatake2222/items/50a47dd3ff3e9163de0d
+https://www.sukimalog.com/archives/33986974.html#m4
+
+
+開発環境(Iwashinosuke):
 WSL Ubuntu-24.04 LTS
 ホストOS: Windows 11
 アーキテクチャ: x86_64
 
 git clone https://github.com/libsdl-org/SDL.git
 で取得したSDL3プロジェクトをドキュメントに従いビルド・インストール済み
+
+
+CMakeはデフォルトで4タイプの最適化オブションを持ちます。
+(Debug, Release, RelWithDebInfo, MinSizeRel)
+モード切り替え:
+cmake . -DCMAKE_BUILD_TYPE=Release
+実行時選択:
+cmake --build . --config Release
+
+CMakeでのSDL3の扱いについて→ https://wiki.libsdl.org/SDL3/README/cmake
+
+https://github.com/libsdl-org/SDL/issues/11283
+直でインストールされたSDL3(MinGWでない方)でコンパイルするときは、オプションでの設定を忘れずに
+(↑CMakeでコンパイルする場合は必要ありません)
+例:
+g++ -o 実行ファイル名 ソース `pkg-config sdl3 --cflags --libs` 

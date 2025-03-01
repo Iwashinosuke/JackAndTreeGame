@@ -33,3 +33,8 @@
 
 # .vscode
 .vscode/
+
+# CMake build directory
+build/
+build-linux/
+build-windows/
