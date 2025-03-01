@@ -1,3 +1,14 @@
 https://github.com/libsdl-org/SDL/issues/11283
 コンパイルするときは、オプションでの設定を忘れずに
 g++ -o 実行ファイル名 ソース `pkg-config sdl3 --cflags --libs` 
+
+開発環境上で動くようにコンパイル→  make
+Windows向けのコンパイル→         cmake
+
+開発環境:
+WSL Ubuntu-24.04 LTS
+ホストOS: Windows 11
+アーキテクチャ: x86_64
+
+git clone https://github.com/libsdl-org/SDL.git
+で取得したSDL3プロジェクトをドキュメントに従いビルド・インストール済み

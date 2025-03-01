@@ -1,3 +1,14 @@
+/*****ジャックと木*****/
+
+// #define SDL_MAIN_USE_CALLBACKS 1 /* use the callbacks instead of main() */
+// #include "../include/structs.hpp"
+
+// /* This function runs once at startup. */
+// SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
+// {
+//     SDL_SetAppMetadata("Example Renderer Clear", "1.0", "com.example.renderer-clear");
+// }
+
 /* clear.c ... */
 
 /*
