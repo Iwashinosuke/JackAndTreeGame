@@ -15,11 +15,11 @@ RUN apt update && \
 
 # 公式からcloneしてビルド
 # (Linux向けビルドではこちらを使用)
-# RUN git clone https://github.com/libsdl-org/SDL.git /SDL/SDL3
-# WORKDIR /SDL/SDL3/build-scripts
-# RUN cmake ../CMakeLists.txt -B . && \
-#     make && \
-#     make install
+RUN git clone https://github.com/libsdl-org/SDL.git /SDL/SDL3
+WORKDIR /SDL/SDL3/build-scripts
+RUN cmake ../CMakeLists.txt -B . && \
+    make && \
+    make install
 
 # Windows向けクロスコンパイル用ライブラリ取得
 RUN wget https://www.libsdl.org/release/SDL3-devel-3.2.4-mingw.zip -O SDL3-mingw.zip -P /SDL
