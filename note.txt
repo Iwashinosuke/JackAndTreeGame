@@ -3,19 +3,18 @@ cmakeコマンドの例(今回は不使用):
  cmake -S . -B build
  cmake --build build
 
-ビルドコマンド:(chmod775権限付与をしたあと)
-    sudo ./build.sh
+ビルドコマンド:(chmod 755権限付与をしたあと)
+    sudo ./build.sh {targetOS} {buildType}
+targetOS = windows, linux
+buildType = Debug, Release, RelWithDebInfo, MinSizeRel
 
 
-Windowsターゲットの場合は、
--DBUILD_TARGET=windows
-Linuxターゲットの場合は、
--DBUILD_TARGET=linux
-のオプションを設定してください。
-
+Dockerコンテナ内でbuild.shを実行すると、
+bash: ./build.sh: cannot execute: required file not found
+というエラーが発生する場合があります。その場合は、新しいshファイルを同じディレクトリ上に作り、そこにbuild.shの内容をコピペして実行してください。
+(原因不明の現象らしいです。解決待ち)
 参考:
-https://qiita.com/iwatake2222/items/50a47dd3ff3e9163de0d
-https://www.sukimalog.com/archives/33986974.html#m4
+https://unix.stackexchange.com/questions/721844/linux-bash-shell-script-error-cannot-execute-required-file-not-found
 
 
 開発環境(Iwashinosuke):
@@ -36,8 +35,10 @@ cmake --build . --config Release
 
 CMakeでのSDL3の扱いについて→ https://wiki.libsdl.org/SDL3/README/cmake
 
+
 https://github.com/libsdl-org/SDL/issues/11283
 直でインストールされたSDL3(MinGWでない方)でコンパイルするときは、オプションでの設定を忘れずに
 (↑CMakeでコンパイルする場合は必要ありません)
 例:
 g++ -o 実行ファイル名 ソース `pkg-config sdl3 --cflags --libs` 
+
