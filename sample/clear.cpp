@@ -11,7 +11,6 @@
  #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
  #include <SDL3/SDL.h>
  #include <SDL3/SDL_main.h>
- #include <string>
  
     using namespace std;
 
@@ -22,8 +21,7 @@
  /* This function runs once at startup. */
  SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
  {
-    string str = "Example Renderer Clear";
-     SDL_SetAppMetadata(str.c_str(), "1.0", "com.example.renderer-clear");
+     SDL_SetAppMetadata("Example Renderer Clear", "1.0", "com.example.renderer-clear");
  
      if (!SDL_Init(SDL_INIT_VIDEO)) {
          SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());

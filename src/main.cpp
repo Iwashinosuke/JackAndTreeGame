@@ -1,24 +1,5 @@
 /*****ジャックと木*****/
 
-// #define SDL_MAIN_USE_CALLBACKS 1 /* use the callbacks instead of main() */
-// #include "../include/structs.hpp"
-
-// /* This function runs once at startup. */
-// SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
-// {
-//     SDL_SetAppMetadata("Example Renderer Clear", "1.0", "com.example.renderer-clear");
-// }
-
-/* clear.c ... */
-
-/*
- * This example code creates an SDL window and renderer, and then clears the
- * window to a different color every frame, so you'll effectively get a window
- * that's smoothly fading between colors.
- *
- * This code is public domain. Feel free to use it for any purpose!
- */
-
  #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
  #include <SDL3/SDL.h>
  #include <SDL3/SDL_main.h>
@@ -33,15 +14,15 @@
  /* This function runs once at startup. */
  SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
  {
-    string str = "Example Renderer Clear";
-     SDL_SetAppMetadata(str.c_str(), "1.0", "com.example.renderer-clear");
+    string str = "Jack and Tree";
+     SDL_SetAppMetadata(str.c_str(), "0.1", "jackandtree");
  
      if (!SDL_Init(SDL_INIT_VIDEO)) {
          SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
          return SDL_APP_FAILURE;
      }
  
-     if (!SDL_CreateWindowAndRenderer("examples/renderer/clear", 768, 1024, 0, &window, &renderer)) {
+     if (!SDL_CreateWindowAndRenderer("Jack and Tree", 768, 1024, 0, &window, &renderer)) {
          SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
          return SDL_APP_FAILURE;
      }
@@ -71,6 +52,9 @@
      /* clear the window to the draw color. */
      SDL_RenderClear(renderer);
  
+    /* test object */
+
+
      /* put the newly-cleared rendering on the screen. */
      SDL_RenderPresent(renderer);
  

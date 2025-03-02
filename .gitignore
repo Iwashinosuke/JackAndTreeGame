@@ -38,3 +38,8 @@
 build/
 build-linux/
 build-windows/
+
+# sample but source code
+sample/
+!sample/*.cpp
+!sample/*.c

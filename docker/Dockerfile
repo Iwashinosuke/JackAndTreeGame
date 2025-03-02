@@ -14,7 +14,7 @@ RUN apt update && \
     libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev
 
 # 公式からcloneしてビルド
-# (Linux向けビルドではこちらを使用)
+# (Linux向けビルドや、テストファイル、公式のサンプルのコンパイルに使用)
 RUN git clone https://github.com/libsdl-org/SDL.git /SDL/SDL3
 WORKDIR /SDL/SDL3/build-scripts
 RUN cmake ../CMakeLists.txt -B . && \
