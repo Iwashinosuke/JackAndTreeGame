@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 # Set the project name
-project(JTGame)
+project(MJGame)
 
 # Find SDL3
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)

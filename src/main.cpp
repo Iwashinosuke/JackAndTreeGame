@@ -2,9 +2,34 @@
 #include "../include/main.hpp"
 
 GameManager game_manager;
+Player player;
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
+
+
+
+/* 実際のFPSの計算　デバッグ用 */
+Uint64 CalcFps()
+{
+    static Uint64 prevTime;
+    Uint64 current = SDL_GetTicks();
+    Uint64 fpsCnt = current - prevTime;
+    prevTime = current;
+    return 1000 / fpsCnt;
+}
+
+/* 大体目標のFPSくらいになるようにフレームレートを制限 */
+void CapFrameRate(Uint64 targetFpsNanoSec)
+{
+    static Uint64 prevTime;
+    Uint64 workedNanoSec = (SDL_GetTicks() - prevTime) * 1000000;
+    Uint64 wait = targetFpsNanoSec - workedNanoSec;
+
+    if(wait > 0) SDL_DelayPrecise(wait);
+
+    prevTime = SDL_GetTicks();
+}
 
 /* アプリ初期化 */
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
@@ -29,41 +54,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 /* プレイヤからの入力を監視 */
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
-    // switch (event->type) {
-        
-        
-    // }
-    if (event->type == SDL_EVENT_KEY_DOWN)
-    {
-        switch(event->key.scancode)
-        {
-            case SDL_SCANCODE_W:
-                break;
-            case SDL_SCANCODE_A:
-                break;
-            // case SDL_SCANCODE_S:
-            //     break;
-            case SDL_SCANCODE_D:
-                break;
-            case SDL_SCANCODE_SPACE:
-                break;
-        }
-    }
-    if (event->type == SDL_EVENT_KEY_UP)
-    {
-        switch(event->key.scancode)
-        {
-            case SDL_SCANCODE_W:
-                break;
-            case SDL_SCANCODE_SPACE:
-                break;
-        }
-    }
-    if (event->type == SDL_EVENT_MOUSE_MOTION)
-    {
-        // mx = event->motion.x;
-        // my = event->motion.y;
-    }
+    player.UpdateInput(event);
+    
     if (event->type == SDL_EVENT_QUIT) {
         return SDL_APP_SUCCESS;  /* OSに正常終了を示して終了 */
     }
@@ -73,6 +65,21 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 /* アプリのメインループ */
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
+    /* 白背景の描画 */
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);  /* white, full alpha */
+    SDL_RenderClear(renderer);  /* start with a blank canvas. */    
+
+    /*フレームレート制限*/
+
+    CapFrameRate(GameManagerParam::TARGET_FPS_NANO_SEC);
+
+    /* (デバッグ)FPS表示 */
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE); 
+    SDL_RenderDebugTextFormat(renderer, 10, 10, "FPS: %" SDL_PRIu64 , CalcFps());
+    
+    /* 描画 */
+    SDL_RenderPresent(renderer);  
+
     return SDL_APP_CONTINUE; // プログラム続行
 }
 
