@@ -1,62 +1,83 @@
-/*****ジャックと木*****/
+#define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
+#include "../include/main.hpp"
 
- #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
- #include <SDL3/SDL.h>
- #include <SDL3/SDL_main.h>
- #include <string>
- 
-    using namespace std;
-
- /* We will use this renderer to draw into this window every frame. */
- static SDL_Window *window = NULL;
- static SDL_Renderer *renderer = NULL;
- 
- /* This function runs once at startup. */
- SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
- {
-    string str = "Jack and Tree";
-     SDL_SetAppMetadata(str.c_str(), "0.1", "jackandtree");
- 
-     if (!SDL_Init(SDL_INIT_VIDEO)) {
-         SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
-         return SDL_APP_FAILURE;
-     }
- 
-     if (!SDL_CreateWindowAndRenderer("Jack and Tree", 768, 1024, 0, &window, &renderer)) {
-         SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
-         return SDL_APP_FAILURE;
-     }
- 
-     return SDL_APP_CONTINUE;  /* carry on with the program! */
- }
- 
- /* This function runs when a new event (mouse input, keypresses, etc) occurs. */
- SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
- {
-     if (event->type == SDL_EVENT_QUIT) {
-         return SDL_APP_SUCCESS;  /* end the program, reporting success to the OS. */
-     }
-     return SDL_APP_CONTINUE;  /* carry on with the program! */
- }
- 
- /* This function runs once per frame, and is the heart of the program. */
- SDL_AppResult SDL_AppIterate(void *appstate)
- {
-     const double now = ((double)SDL_GetTicks()) / 1000.0;  /* convert from milliseconds to seconds. */
-
-     /* clear the window to the draw color. */
-     SDL_RenderClear(renderer);
- 
+GameManager game_manager;
+static SDL_Window *window = NULL;
+static SDL_Renderer *renderer = NULL;
 
 
-     /* put the newly-cleared rendering on the screen. */
-     SDL_RenderPresent(renderer);
- 
-     return SDL_APP_CONTINUE;  /* carry on with the program! */
- }
- 
- /* This function runs once at shutdown. */
- void SDL_AppQuit(void *appstate, SDL_AppResult result)
- {
-     /* SDL will clean up the window/renderer for us. */
- }
+/* アプリ初期化 */
+SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
+{
+    SDL_SetAppMetadata(game_manager.getTitle().c_str(), 
+                        game_manager.getVersion().c_str(), 
+                        game_manager.getTitle().c_str());
+
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
+    if (!SDL_CreateWindowAndRenderer(game_manager.getTitle().c_str(), game_manager.getWindowWidth(), game_manager.getWindowHeight(), 0, &window, &renderer)) {
+        SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
+    return SDL_APP_CONTINUE; // プログラム続行
+}
+
+/* プレイヤからの入力を監視 */
+SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
+{
+    // switch (event->type) {
+        
+        
+    // }
+    if (event->type == SDL_EVENT_KEY_DOWN)
+    {
+        switch(event->key.scancode)
+        {
+            case SDL_SCANCODE_W:
+                break;
+            case SDL_SCANCODE_A:
+                break;
+            // case SDL_SCANCODE_S:
+            //     break;
+            case SDL_SCANCODE_D:
+                break;
+            case SDL_SCANCODE_SPACE:
+                break;
+        }
+    }
+    if (event->type == SDL_EVENT_KEY_UP)
+    {
+        switch(event->key.scancode)
+        {
+            case SDL_SCANCODE_W:
+                break;
+            case SDL_SCANCODE_SPACE:
+                break;
+        }
+    }
+    if (event->type == SDL_EVENT_MOUSE_MOTION)
+    {
+        // mx = event->motion.x;
+        // my = event->motion.y;
+    }
+    if (event->type == SDL_EVENT_QUIT) {
+        return SDL_APP_SUCCESS;  /* OSに正常終了を示して終了 */
+    }
+    return SDL_APP_CONTINUE;  /* プログラム続行 */
+}
+
+/* アプリのメインループ */
+SDL_AppResult SDL_AppIterate(void *appstate)
+{
+    return SDL_APP_CONTINUE; // プログラム続行
+}
+
+/* アプリの終了処理 */
+void SDL_AppQuit(void *appstate, SDL_AppResult result)
+{
+    /* windowとrendererは自動で終了される */
+}

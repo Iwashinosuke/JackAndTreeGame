@@ -43,3 +43,6 @@ build-windows/
 sample/
 !sample/*.cpp
 !sample/*.c
+
+# personal things...
+src/junk.cpp
