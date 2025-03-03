@@ -37,7 +37,25 @@ namespace StageParam
 {
     constexpr int WIDTH = 600;
     constexpr int HEIGHT = 800;
-    constexpr int BLOCK_SIZE = 30;
+    constexpr int BLOCK_SIZE = 10;
+}
+
+namespace UIParam
+{
+    namespace Title
+    {
+        constexpr int FONT_SIZE = 50;
+    }
+
+    namespace Game
+    {
+        // constexpr float FONT_SIZE = 20.0f;
+        constexpr int FONT_COLOR = 0;
+        Uint16 WINDOW_X = 0;
+        Uint16 WINDOW_Y = GameManagerParam::WINDOW_HEIGHT - 150;
+        Uint16 WINDOW_WIDTH = GameManagerParam::WINDOW_WIDTH;
+        Uint16 WINDOW_HEIGHT = 150;        
+    }
 }
 
 #endif // COMMON_HPP

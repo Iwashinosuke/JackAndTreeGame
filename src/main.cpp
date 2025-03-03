@@ -3,6 +3,8 @@
 
 GameManager game_manager;
 Player player;
+TitleUI titleUi;
+GameUI gameUi;
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
@@ -49,7 +51,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     return SDL_APP_CONTINUE; // プログラム続行
 }
 
-/* プレイヤからの入力を監視 */
+/* プレイヤからの入力を監視 そのほかコールバックを受付け */
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
     player.UpdateInput(event);
@@ -64,20 +66,32 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     /* 白背景の描画 */
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);  /* white, full alpha */
+    SDL_SetRenderDrawColor(renderer, 225, 225, 225, SDL_ALPHA_OPAQUE);  /* white, full alpha */
     SDL_RenderClear(renderer);  /* start with a blank canvas. */    
 
     /* ゲーム内オブジェクトの更新 */
-    player.UpdateRender(window,renderer);
-
     SDL_FRect rect;
     float rect_size = 80;
-    rect.x = 300 - rect_size/2;
-    rect.y = 400 - rect_size;
-    rect.w = rect.h = rect_size;
+    rect.x = 0;
+    rect.y = GameManagerParam::WINDOW_HEIGHT / 2;
+    rect.w = GameManagerParam::WINDOW_WIDTH; 
+    rect.h = rect_size;
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);  /* red, full alpha */
-    SDL_RenderRect(renderer, &rect); 
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
+    SDL_RenderFillRect(renderer, &rect); 
+    
+    SDL_FRect rect2;
+    float rect2_size = 80;
+    rect2.x = GameManagerParam::WINDOW_WIDTH / 3;
+    rect2.y = GameManagerParam::WINDOW_HEIGHT / 2 + 50;
+    rect2.w = GameManagerParam::WINDOW_WIDTH / 3; 
+    rect2.h = 500;
+    SDL_SetRenderScale(renderer, 1.0f, 1.0f);
+    SDL_SetRenderDrawColor(renderer, 200, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
+    SDL_RenderFillRect(renderer, &rect2); 
+
+    player.UpdateRender(window,renderer);
+    gameUi.UpdateRender(window,renderer);
 
     /*フレームレート制限*/
     CapFrameRate(GameManagerParam::TARGET_FPS_NANO_SEC);

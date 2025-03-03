@@ -6,6 +6,7 @@
 #include <string>
 #include "game_manager.hpp"
 #include "player.hpp"
+#include "ui.hpp"
 
 void    CapFrameRate    (Uint64 targetFpsNanoSec);
 Uint64  CalcFps         ( void );

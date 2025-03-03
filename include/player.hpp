@@ -29,6 +29,11 @@ class Player
             _chargejump_key = false;
         }
 
+        float CalcSpd(float ds, float as)
+        {
+            return ds * as;
+        }
+
         void UpdateInput(SDL_Event *event)
         {
             if (event->type == SDL_EVENT_KEY_DOWN)
@@ -79,7 +84,7 @@ class Player
                 }
         }
 
-        bool UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
+        void UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
         {
             // if(_x <= 0 && dx < 0)
             // {
@@ -100,7 +105,7 @@ class Player
             SDL_SetRenderScale(renderer, 1.0f, 1.0f);
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
             SDL_RenderRect(renderer, &rect); 
-            return true;
+        
         }
 
         bool CanJump()
