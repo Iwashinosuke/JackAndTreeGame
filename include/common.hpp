@@ -17,7 +17,7 @@ namespace GameManagerParam
         GAMEOVER,
         EXIT
     };
-    const string GAME_TITLE = "Jack And Tree";
+    const string GAME_TITLE = "Mono Jumper";
     const string GAME_VERSION = "0.1";
     constexpr Uint16 WINDOW_WIDTH = 600;
     constexpr Uint16 WINDOW_HEIGHT = 800;
