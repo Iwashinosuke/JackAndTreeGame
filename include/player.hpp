@@ -15,10 +15,12 @@ class Player
     public:
         Player(void)
         {
-            _foot_center_x = 100.0f;
-            _foot_center_y = 600.0f;
+            _foot_center_x = GameManagerParam::WINDOW_WIDTH / 2;
+            _foot_center_y = GameManagerParam::WINDOW_HEIGHT / 2;
             _sprite_x = 0.0f;
             _sprite_y = 0.0f;
+            _dx = 0.0f;
+            _dy = 0.0f;
             _px = 0.0f;
             _py = 0.0f;
             _charge_level = 0.0f;
@@ -93,9 +95,9 @@ class Player
             SDL_FRect rect;
             float rect_size = 30;
             rect.x = _foot_center_x - rect_size/2;
-            rect.y = _foot_center_y + rect_size;
+            rect.y = _foot_center_y - rect_size;
             rect.w = rect.h = 30;
-            SDL_SetRenderScale(renderer, 3.0f, 3.0f);
+            SDL_SetRenderScale(renderer, 1.0f, 1.0f);
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
             SDL_RenderRect(renderer, &rect); 
             return true;
@@ -106,17 +108,18 @@ class Player
             return _can_jump;
         }
 
-        void setLeftKey(bool key){ _left_key = key; }
-        void setRightKey(bool key){ _right_key = key; }
-        void setChargeJumpKey(bool key){ _chargejump_key = key; }
-
-        float getSpriteX(void){ return _sprite_x; }
-        float getSpriteY(void){ return _sprite_y; }
+        void SetLeftKey(bool key){ _left_key = key; }
+        void SetRightKey(bool key){ _right_key = key; }
+        void SetChargeJumpKey(bool key){ _chargejump_key = key; }
+        Uint16 GetFootCenterX(void){ return _foot_center_x; }
+        Uint16 GetFootCenterY(void){ return _foot_center_y; }
+        float GetSpriteX(void){ return _sprite_x; }
+        float GetSpriteY(void){ return _sprite_y; }
     private:
         /* 座標計算 */
         float _distortion = 1.0f;
         long int frame = 0;
-        void _calcFootCenter(void){
+        void _CalcFootCenter(void){
             _foot_center_y = PlayerParam::MAX_HEIGHT * SDL_sin(2*3.14/40);
 
         }

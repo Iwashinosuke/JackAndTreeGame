@@ -21,11 +21,11 @@ class GameManager
             _window_width = WINDOW_WIDTH;
             _window_height = WINDOW_HEIGHT;
         };
-        GameState getState(void) const { return _state; }
-        string getTitle(void) const { return _title; }
-        string getVersion(void) const { return _version; }
-        int getWindowWidth(void) const { return _window_width; }
-        int getWindowHeight(void) const { return _window_height; }
+        GameState GetState(void) const { return _state; }
+        string GetTitle(void) const { return _title; }
+        string GetVersion(void) const { return _version; }
+        int GetWindowWidth(void) const { return _window_width; }
+        int GetWindowHeight(void) const { return _window_height; }
     private:
         /* データ */
         GameState _state;

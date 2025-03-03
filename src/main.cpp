@@ -3,11 +3,9 @@
 
 GameManager game_manager;
 Player player;
+
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
-
-
-
 
 /* 実際のFPSの計算　デバッグ用 */
 Uint64 CalcFps()
@@ -69,13 +67,27 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);  /* white, full alpha */
     SDL_RenderClear(renderer);  /* start with a blank canvas. */    
 
-    /*フレームレート制限*/
+    /* ゲーム内オブジェクトの更新 */
+    player.UpdateRender(window,renderer);
 
+    SDL_FRect rect;
+    float rect_size = 80;
+    rect.x = 300 - rect_size/2;
+    rect.y = 400 - rect_size;
+    rect.w = rect.h = rect_size;
+    SDL_SetRenderScale(renderer, 1.0f, 1.0f);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);  /* red, full alpha */
+    SDL_RenderRect(renderer, &rect); 
+
+    /*フレームレート制限*/
     CapFrameRate(GameManagerParam::TARGET_FPS_NANO_SEC);
 
     /* (デバッグ)FPS表示 */
+    SDL_SetRenderScale(renderer, 1.0f, 1.0f);
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE); 
     SDL_RenderDebugTextFormat(renderer, 10, 10, "FPS: %" SDL_PRIu64 , CalcFps());
+    SDL_RenderDebugTextFormat(renderer, 10, 20, "centerX: %" SDL_PRIs32 , player.getFootCenterX());
+    SDL_RenderDebugTextFormat(renderer, 10, 30, "centerY: %" SDL_PRIs32 , player.getFootCenterY());
     
     /* 描画 */
     SDL_RenderPresent(renderer);  
