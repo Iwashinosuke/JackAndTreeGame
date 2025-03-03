@@ -32,16 +32,16 @@ void CapFrameRate(Uint64 targetFpsNanoSec)
 /* アプリ初期化 */
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
-    SDL_SetAppMetadata(game_manager.getTitle().c_str(), 
-                        game_manager.getVersion().c_str(), 
-                        game_manager.getTitle().c_str());
+    SDL_SetAppMetadata(game_manager.GetTitle().c_str(), 
+                        game_manager.GetVersion().c_str(), 
+                        game_manager.GetTitle().c_str());
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
 
-    if (!SDL_CreateWindowAndRenderer(game_manager.getTitle().c_str(), game_manager.getWindowWidth(), game_manager.getWindowHeight(), 0, &window, &renderer)) {
+    if (!SDL_CreateWindowAndRenderer(game_manager.GetTitle().c_str(), game_manager.GetWindowWidth(), game_manager.GetWindowHeight(), 0, &window, &renderer)) {
         SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
@@ -86,8 +86,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE); 
     SDL_RenderDebugTextFormat(renderer, 10, 10, "FPS: %" SDL_PRIu64 , CalcFps());
-    SDL_RenderDebugTextFormat(renderer, 10, 20, "centerX: %" SDL_PRIs32 , player.getFootCenterX());
-    SDL_RenderDebugTextFormat(renderer, 10, 30, "centerY: %" SDL_PRIs32 , player.getFootCenterY());
+    SDL_RenderDebugTextFormat(renderer, 10, 20, "centerX: %" SDL_PRIs32 , player.GetFootCenterX());
+    SDL_RenderDebugTextFormat(renderer, 10, 30, "centerY: %" SDL_PRIs32 , player.GetFootCenterY());
     
     /* 描画 */
     SDL_RenderPresent(renderer);  
