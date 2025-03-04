@@ -24,13 +24,17 @@ class GameManager
 
         int InitGameManager(void)
         {
-            _state = GameState::TITLE;
+            // _state = GameState::TITLE;
             return 0;
         }
 
         GameState UpdateInput(SDL_Event *event)
         {
-            if(_state == GameState::TITLE)
+            if(_state == GameState::INIT)
+            {
+                _state = GameState::TITLE;
+            }
+            else if(_state == GameState::TITLE)
             {
                 /* "Press Any Button To Start"を実装 */
                 if(event->type == SDL_EVENT_KEY_DOWN)

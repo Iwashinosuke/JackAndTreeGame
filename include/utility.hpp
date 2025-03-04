@@ -4,10 +4,13 @@
 #include <SDL3/SDL.h>
 
 inline void MYDL_RenderBoldLineRect(SDL_Renderer *renderer, float x, float y, float w, float h, float thickness);
+inline bool IsConflictRectAndPoint(float x1, float y1, float w1, float h1, float x2, float y2);
 
-
+/* (x,y)を左上頂点とする太線のrectを描画します */
 inline void MYDL_RenderBoldLineRect(SDL_Renderer *renderer, float x, float y, float w, float h, float thickness)
 {
+    
+
     SDL_FRect rects[4];
 
     rects[0].x = x;
@@ -31,6 +34,16 @@ inline void MYDL_RenderBoldLineRect(SDL_Renderer *renderer, float x, float y, fl
     rects[3].h = h;
 
     SDL_RenderFillRects(renderer, rects, 4);
+}
+
+/* rectと点の衝突判定 */
+inline bool IsConflictRectAndPoint(float x1, float y1, float w1, float h1, float x2, float y2)
+{
+    if(x1 < x2 && x2 < x1 + w1 && y1 < y2 && y2 < y1 + h1)
+    {
+        return true;
+    }
+    return false;
 }
 
 #endif // UTILITY_HPP

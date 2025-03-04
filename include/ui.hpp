@@ -30,21 +30,20 @@ class TitleUI : public UIBase
     public:
         TitleUI(void)
         {
-
+            
         }
 
         void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
-            SDL_FRect rect;
-            rect.x = 0;
-            rect.y = 0;
-            rect.w = GameManagerParam::WINDOW_WIDTH;
-            rect.h = GameManagerParam::WINDOW_HEIGHT;
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderRect(renderer, &rect); 
+            SDL_SetRenderScale(renderer, 4.0f, 4.0f);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); 
+            SDL_RenderDebugText(renderer, 31, GameManagerParam::WINDOW_HEIGHT/10, "Mono Jumper");
+            SDL_SetRenderScale(renderer, 2.0f, 2.0f);
+            SDL_RenderDebugText(renderer, 50, GameManagerParam::WINDOW_HEIGHT/3+50, "Press Any Button To Start");
         }
     private:    
-
+        SDL_Surface *text_surfaces;
+        int text_cnt;
 };  
 
 class GameUI : public UIBase
@@ -57,8 +56,7 @@ class GameUI : public UIBase
 
         void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(renderer, 100, 100, 100, 100);
+            SDL_SetRenderDrawColor(renderer, 200, 200, 200, SDL_ALPHA_OPAQUE);
             
             SDL_FRect rect1;
             rect1.x = Game::WINDOW_X;
@@ -67,31 +65,10 @@ class GameUI : public UIBase
             rect1.h = Game::WINDOW_HEIGHT;
             SDL_RenderFillRect(renderer, &rect1); 
 
-            SDL_SetRenderDrawColor(renderer, 10, 10, 10, 100);
+            SDL_SetRenderDrawColor(renderer, 80, 80, 80, SDL_ALPHA_OPAQUE);
             
-            // SDL_FRect rects2[2];
-            // rects2[0].x = Game::WINDOW_X;
-            // rects2[0].y = Game::WINDOW_Y;
-            // rects2[0].w = Game::WINDOW_WIDTH;
-            // rects2[0].h = 10;
-            // rects2[1].x = Game::WINDOW_X;
-            // rects2[1].y = Game::WINDOW_Y + Game::WINDOW_HEIGHT -10;
-            // rects2[1].w = Game::WINDOW_WIDTH;
-            // rects2[1].h = 10;
-            // SDL_RenderFillRects(renderer, rects2, 2);
             MYDL_RenderBoldLineRect(renderer, Game::WINDOW_X, Game::WINDOW_Y, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT, 10);
             MYDL_RenderBoldLineRect(renderer, Game::WINDOW_X+15, Game::WINDOW_Y+15, Game::WINDOW_WIDTH-30, Game::WINDOW_HEIGHT-30, 8);
-
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-
-            // SDL_SetRenderScale(renderer, 1.5f, 1.5f);
-            // SDL_SetRenderDrawColor(renderer, 10, 10, 10, SDL_ALPHA_OPAQUE); 
-            // SDL_RenderDebugTextFormat(renderer, 10, 30, "score x y %" SDL_PRIu64 " %" SDL_PRIu64, (Uint64)score_text_x, (Uint64)score_text_y);
-            // SDL_RenderDebugTextFormat(renderer, score_text_x, score_text_y , "SCORE: %" SDL_PRIs32 , 100000);
-            // SDL_SetRenderScale(renderer, 2.0f, 2.0f);
-            // SDL_RenderDebugTextFormat(renderer, 10, 200, "Press SPACE to jump");
-            // SDL_RenderDebugTextFormat(renderer, info_text_x, info_text_y, "Press SPACE to jump");
-            // SDL_SetRenderScale(renderer, 1.0f, 1.0f);
         }
     private:
         const Uint64 score = 0;
@@ -111,13 +88,9 @@ class PauseUI : public UIBase
 
         void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
-            SDL_FRect rect;
-            rect.x = 0;
-            rect.y = 0;
-            rect.w = GameManagerParam::WINDOW_WIDTH;
-            rect.h = GameManagerParam::WINDOW_HEIGHT;
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderRect(renderer, &rect); 
+            SDL_SetRenderScale(renderer, 2.0f, 2.0f);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); 
+            SDL_RenderDebugText(renderer, 33, GameManagerParam::WINDOW_HEIGHT/5, "PAUSE");
         }
     private:    
 
@@ -128,21 +101,17 @@ class GameOverUI : public UIBase
     public:
         GameOverUI(void)
         {
-
+            
         }
 
         void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
-            SDL_FRect rect;
-            rect.x = 0;
-            rect.y = 0;
-            rect.w = GameManagerParam::WINDOW_WIDTH;
-            rect.h = GameManagerParam::WINDOW_HEIGHT;
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-            SDL_RenderRect(renderer, &rect); 
+            SDL_SetRenderScale(renderer, 4.0f, 4.0f);
+            SDL_SetRenderDrawColor(renderer, 200, 0, 0, SDL_ALPHA_OPAQUE); 
+            SDL_RenderDebugText(renderer, 33, GameManagerParam::WINDOW_HEIGHT/10, "GAME OVER");
         }
     private:    
-
+        
 };
 
 #endif // UI_HPP

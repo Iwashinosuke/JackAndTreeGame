@@ -15,7 +15,6 @@ namespace GameManagerParam
     {
         INIT,
         TITLE,
-        EVENT,
         PLAY,
         PAUSE,
         GAMEOVER,
@@ -52,7 +51,7 @@ namespace PlayerParam
         GAMEOVER,
         EXIT
     };
-    inline constexpr float MAX_CHARGE_TIME = 2.0f; // FPS準拠、大体の時間
+    inline constexpr float MAX_CHARGE_TIME = 1.5f; // FPS準拠、大体の時間
     inline constexpr float CHARGE_ADDR = 1 / (MAX_CHARGE_TIME * GameManagerParam::TARGET_FPS);
     inline constexpr float MAX_JUMP_POWER = 20.0f;
     inline constexpr float JUMP_POWER_LOSS = 1.0f;

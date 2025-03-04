@@ -1,14 +1,78 @@
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 #include "../include/main.hpp"
 
+// #include <SDL3_ttf/SDL_ttf.h>
+// #include <SDL3_image/SDL_image.h>
+
 GameManager game_manager;
 Player player;
 TitleUI titleUi;
 GameUI gameUi;
-
+PauseUI pauseUi;
+GameOverUI gameOverUi;
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
+
+// デモ用
+TTF_Font *font = NULL;
+SDL_Surface *img = NULL;
+
+/* (cx,cy)を中心として単位時間あたりで点滅するrectを描画します この関数で描画されるrectは、点滅間隔が共有されるため使用法に注意 */
+inline void RenderBlinkRect(SDL_Renderer *renderer, Uint16 cx, Uint16 cy)
+{
+    static Uint64 prevTime;
+    static bool lighting = true;
+    static Uint8 size = 20;
+    Uint64 blink_intensity = 500;
+
+    Uint64 current = SDL_GetTicks();
+    Uint64 elapsed = current - prevTime;
+    if(elapsed > blink_intensity)
+    {
+        lighting = !lighting;
+        prevTime = current;
+    }
+
+    SDL_FRect rect;
+    rect.x = cx - size / 2;
+    rect.y = cy - size / 2;
+    rect.w = size;
+    rect.h = size;
+    if(lighting)
+    {
+        SDL_SetRenderDrawColor(renderer, 255, 150, 50, SDL_ALPHA_OPAQUE);
+    }
+    else
+    {
+        SDL_SetRenderDrawColor(renderer, 200, 100, 10, SDL_ALPHA_OPAQUE);
+    }
+
+    SDL_RenderFillRect(renderer, &rect);
+}
+
+/* (cx,cy)を中心として単位時間あたりで輝くdiamondを描画します この関数で描画される対象は、点滅間隔が共有されるため使用法に注意 */
+inline void RenderRainbowDiamond(SDL_Renderer *renderer, Uint16 cx, Uint16 cy)
+{
+    static Uint8 baseCol;
+    static Uint16 size = 50;
+    static Uint64 rainbow_intensity = 500;
+    SDL_FRect rect;
+    rect.x = cx - size / 2;
+    rect.y = cy - size / 2;
+    rect.w = size;
+    rect.h = size;
+    
+
+
+    for(Uint16 rx=0; rx < size/2; rx++)
+    {
+        SDL_SetRenderDrawColor(renderer, baseCol+rx, baseCol+61+rx, baseCol+101+rx, SDL_ALPHA_OPAQUE);
+        SDL_RenderLine(renderer, cx+rx, -size/2+cy+rx, -size/2+cx+rx, cy+rx);
+    }
+
+    baseCol++;
+}
 
 
 /* 実際のFPSの計算　デバッグ用 */
@@ -55,6 +119,17 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     player.InitPlayer();
     player.StartPlay(true, GameManagerParam::WINDOW_HEIGHT / 2);
 
+    // デモ用
+    // font = TTF_OpenFont("../res/font/8bitOperatorPlusSC-Bold.ttf", 20);
+    // if(font == NULL)
+    // {
+    //     SDL_Log("TTF_OpenFont() Error: %s", SDL_GetError());
+    //     return SDL_APP_FAILURE;
+    // }
+    // img = IMG_Load("../res/img/8bitOperatorPlusSC-Bold.png");
+    // IMG_Version();
+
+
     return SDL_APP_CONTINUE; // プログラム続行
 }
 
@@ -96,7 +171,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     /* 白背景の描画 */
-    SDL_SetRenderDrawColor(renderer, 225, 225, 225, SDL_ALPHA_OPAQUE);  /* white, full alpha */
+    SDL_SetRenderDrawColor(renderer, 250, 250, 250, SDL_ALPHA_OPAQUE);  /* white, full alpha */
 
     if(player.GetState() == PlayerParam::PlayerState::GAMEOVER)
     {
@@ -106,37 +181,29 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderClear(renderer);  /* start with a blank canvas. */    
 
     /* ゲーム内オブジェクトの更新 */
-    SDL_FRect rect;
-    float rect_size = 80;
-    rect.x = 0;
-    rect.y = GameManagerParam::WINDOW_HEIGHT / 2;
-    rect.w = GameManagerParam::WINDOW_WIDTH; 
-    rect.h = rect_size;
-    SDL_SetRenderScale(renderer, 1.0f, 1.0f);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
-    SDL_RenderFillRect(renderer, &rect); 
- 
-    // TTF_Font *font = TTF_OpenFont("../res/font/8bitOperatorPlusSC-Bold.ttf", 20);
-    // SDL_Color color = {55, 255, 255};
-    // SDL_Surface *text1 = TTF_RenderText_Solid(font, "Hello, World!", 14 , color);
-
-    SDL_FRect rect2;
-    float rect2_size = 80;
-    rect2.x = GameManagerParam::WINDOW_WIDTH / 3;
-    rect2.y = GameManagerParam::WINDOW_HEIGHT / 2 + 50;
-    rect2.w = GameManagerParam::WINDOW_WIDTH / 3; 
-    rect2.h = 500;
-    SDL_SetRenderScale(renderer, 1.0f, 1.0f);
-    SDL_SetRenderDrawColor(renderer, 200, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
-    SDL_RenderFillRect(renderer, &rect2); 
-
+    // SDL_FRect rect;
+    // float rect_size = 80;
+    // rect.x = 0;
+    // rect.y = GameManagerParam::WINDOW_HEIGHT / 2;
+    // rect.w = GameManagerParam::WINDOW_WIDTH; 
+    // rect.h = rect_size;
+    // SDL_SetRenderScale(renderer, 1.0f, 1.0f);
+    // SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);  
+    // SDL_RenderFillRect(renderer, &rect); 
+    // RenderBlinkRect(renderer, GameManagerParam::WINDOW_WIDTH / 3, GameManagerParam::WINDOW_HEIGHT / 2);    
+    // RenderRainbowDiamond(renderer, GameManagerParam::WINDOW_WIDTH / 3 * 2, GameManagerParam::WINDOW_HEIGHT / 2);
 
     GameManagerParam::GameState gs = game_manager.GetState();
     if(gs == GameManagerParam::GameState::TITLE)
     {
         titleUi.UpdateRender(window,renderer);
     }
-    else if(gs == GameManagerParam::GameState::PLAY)
+    else
+    {
+        gameUi.UpdateRender(window,renderer);
+    }
+
+    if(gs == GameManagerParam::GameState::PLAY)
     {
         PlayerParam::PlayerState    ps  = player.UpdateRender(window,renderer);
 
@@ -148,18 +215,17 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     else if(gs == GameManagerParam::GameState::PAUSE)
     {
         player.StopPlay(PlayerParam::PlayerState::PAUSE);
+        pauseUi.UpdateRender(window,renderer);
     }
     else if(gs == GameManagerParam::GameState::GAMEOVER)
     {
-        game_manager.CallGameOver();
+        gameOverUi.UpdateRender(window,renderer);
     }
     else if(gs == GameManagerParam::GameState::EXIT)
     {
         return SDL_APP_SUCCESS;  /* OSに正常終了を報告 */
     }
 
-
-    gameUi.UpdateRender(window,renderer);
 
     /*フレームレート制限*/
     CapFrameRate(GameManagerParam::TARGET_FPS_NANO_SEC);
