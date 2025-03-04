@@ -131,12 +131,33 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderFillRect(renderer, &rect2); 
 
 
-    PlayerParam::PlayerState    ps  = player.UpdateRender(window,renderer);
+    GameManagerParam::GameState gs = game_manager.GetState();
+    if(gs == GameManagerParam::GameState::TITLE)
+    {
+        titleUi.UpdateRender(window,renderer);
+    }
+    else if(gs == GameManagerParam::GameState::PLAY)
+    {
+        PlayerParam::PlayerState    ps  = player.UpdateRender(window,renderer);
 
-    if(ps == PlayerParam::PlayerState::GAMEOVER)
+        if(ps == PlayerParam::PlayerState::GAMEOVER)
+        {
+            game_manager.CallGameOver();
+        }    
+    }
+    else if(gs == GameManagerParam::GameState::PAUSE)
+    {
+        player.StopPlay(PlayerParam::PlayerState::PAUSE);
+    }
+    else if(gs == GameManagerParam::GameState::GAMEOVER)
     {
         game_manager.CallGameOver();
     }
+    else if(gs == GameManagerParam::GameState::EXIT)
+    {
+        return SDL_APP_SUCCESS;  /* OSに正常終了を報告 */
+    }
+
 
     gameUi.UpdateRender(window,renderer);
 
