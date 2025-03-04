@@ -1,7 +1,6 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include <SDL3/SDL.h>
 #include "common.hpp"
 
 using namespace PlayerParam;
@@ -15,139 +14,67 @@ class Player
     public:
         Player(void)
         {
-            _foot_center_x = GameManagerParam::WINDOW_WIDTH / 2;
-            _foot_center_y = GameManagerParam::WINDOW_HEIGHT / 2;
+            _state = PlayerState::INIT;
+            _foot_center_x = 0;
+            _foot_center_y = 0;
             _sprite_x = 0.0f;
             _sprite_y = 0.0f;
             _dx = 0.0f;
             _dy = 0.0f;
-            _px = 0.0f;
-            _py = 0.0f;
             _charge_level = 0.0f;
+            _prev_foot_center_y = _foot_center_y;
             _left_key = false;
             _right_key = false;
-            _chargejump_key = false;
+            _charge_key = false;
+            _jumping = false;
         }
 
-        float CalcSpd(float ds, float as)
+        void SetPosByWindow(Uint16 x, Uint16 y)
         {
-            return ds * as;
+            _foot_center_x = x;
+            _foot_center_y = y;
         }
+        int InitPlayer(void); 
+        int StartPlay(bool reset, Uint16 window_foot_center_y);
+        int StopPlay(PlayerState state);
 
-        void UpdateInput(SDL_Event *event)
-        {
-            if (event->type == SDL_EVENT_KEY_DOWN)
-                {
-                    switch(event->key.scancode)
-                    {
-                        case SDL_SCANCODE_W:
-                            break;
-                        case SDL_SCANCODE_A:
-                            _left_key = true; // これがないと、細かい調整がしづらい。ボタンを離すと一瞬止まってしまう
-                            _dx = -2;
-                            break;
-                        // case SDL_SCANCODE_S:
-                        //     break;
-                        case SDL_SCANCODE_D:
-                            _right_key = true;
-                            _dx = 2;
-                            break;
-                        case SDL_SCANCODE_SPACE:
-                            // if(CanJump())
-                            // {
-                            //     fy = -10;
-                            // }
-                            break;
-                    }
-                }
-                if (event->type == SDL_EVENT_KEY_UP)
-                {
-                    switch(event->key.scancode)
-                    {
-                        case SDL_SCANCODE_A:
-                            _left_key = false;
-                            if(!_right_key) _dx = 0;
-                            else _dx = 2;
-                            break;
-                        case SDL_SCANCODE_D:
-                            _right_key = false;
-                            if(!_left_key) _dx = 0;
-                            else _dx = -2;
-                            break;
-                        case SDL_SCANCODE_SPACE:
-                            // if(!CanJump())
-                            // {
-                            //     fy = 5;
-                            // }
-                            break;
-                    }
-                }
-        }
-
-        void UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
-        {
-            // if(_x <= 0 && dx < 0)
-            // {
-            //     x = 0;
-            //     dx = 0;
-            // }
-            // else if(x >= 600 - 30 && dx > 0)
-            // {
-            //     x = 600 - 30;
-            //     dx = 0;
-            // }
-            _foot_center_x += _dx;
-            SDL_FRect rect;
-            float rect_size = 30;
-            rect.x = _foot_center_x - rect_size/2;
-            rect.y = _foot_center_y - rect_size;
-            rect.w = rect.h = 30;
-            SDL_SetRenderScale(renderer, 1.0f, 1.0f);
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
-            SDL_RenderRect(renderer, &rect); 
-        
-        }
-
-        bool CanJump()
-        {
-            return _can_jump;
-        }
-
-        void SetLeftKey(bool key){ _left_key = key; }
-        void SetRightKey(bool key){ _right_key = key; }
-        void SetChargeJumpKey(bool key){ _chargejump_key = key; }
+        void UpdateInput(SDL_Event *event);
+        PlayerState UpdateRender(SDL_Window *window, SDL_Renderer *renderer);
         Uint16 GetFootCenterX(void){ return _foot_center_x; }
         Uint16 GetFootCenterY(void){ return _foot_center_y; }
+        float GetChargeLevel(void){ return _charge_level; }
         float GetSpriteX(void){ return _sprite_x; }
         float GetSpriteY(void){ return _sprite_y; }
-    private:
-        /* 座標計算 */
-        float _distortion = 1.0f;
-        long int frame = 0;
-        void _CalcFootCenter(void){
-            _foot_center_y = PlayerParam::MAX_HEIGHT * SDL_sin(2*3.14/40);
+        PlayerState GetState(void){ return _state; }
 
-        }
+    private:        
+        /* 状態 */
+        PlayerState _state;
 
         /* プレイヤの座標は足元の中心を基準とする */
         Uint16 _foot_center_x; 
         Uint16 _foot_center_y;
+        Uint16 _prev_foot_center_y;
 
-        /* グラフィック・物理 */
+        /* グラフィック・基本物理 */
         Uint16 _sprite_x;
         Uint16 _sprite_y;
         float _dx;
         float _dy;
-        float _px;
-        float _py;
         float _charge_level;
-        const float _charge_max = 100.0f;
-        bool _can_jump;
+        const float _charge_max = 1.0f;
+        float _force_y = 0.0f;
+        bool _jumping;       
+
+        /* ステージのための変数 */
+        Uint64 _stage_foot_center_y; // ステージ上での足元のy座標
+        Uint8 _left_edge = 0;
+        Uint16 _right_edge = (Uint16)600;
 
         /* キー */
         bool _left_key;
         bool _right_key;
-        bool _chargejump_key;
+        bool _charge_key;
 };
 
 #endif // PLAYER_HPP
