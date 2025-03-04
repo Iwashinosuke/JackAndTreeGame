@@ -9,10 +9,6 @@
 #include <string>
 using std::string;
 
-// #define SDL_TTF_MAJOR_VERSION                                                                                                              // Printable format: "%d.%d.%d", MAJOR, MINOR, MICRO
-// #define SDL_TTF_VERSION                                                                                                                    // This is the version number macro for the current SDL_ttf version.
-// #define SDL_TTF_VERSION_ATLEAST(X, Y, Z)  
-
 namespace GameManagerParam
 {
     enum GameState
@@ -33,16 +29,36 @@ namespace GameManagerParam
     inline constexpr Uint64 TARGET_FPS_NANO_SEC = 16666667; // 60fps ~= 16666667ns
 }
 
+// namespace InputParam
+// {
+//     enum class Keys
+//     {
+//         CHARGE,
+//         MOVE_LEFT,
+//         MOVE_RIGHT,
+//         PAUSE,
+//         MENU,
+//         EXIT
+//     };
+// }
+
 namespace PlayerParam
 {
+    enum class PlayerState
+    {
+        INIT,
+        PLAY,
+        PAUSE,
+        GAMEOVER,
+        EXIT
+    };
     inline constexpr float MAX_CHARGE_TIME = 2.0f; // FPS準拠、大体の時間
     inline constexpr float CHARGE_ADDR = 1 / (MAX_CHARGE_TIME * GameManagerParam::TARGET_FPS);
-    inline constexpr float MAX_JUMP_HEIGHT = 100.0f;
     inline constexpr float MAX_JUMP_POWER = 20.0f;
     inline constexpr float JUMP_POWER_LOSS = 1.0f;
     inline constexpr float MAX_FALL_POWER = 10.0f;
     inline constexpr float FALL_POWER_ADDR = 0.5f;
-    inline constexpr float MAX_DX = 10.0f;
+    inline constexpr float MAX_JUMP_HEIGHT = 100.0f;
 }
 
 namespace StageParam

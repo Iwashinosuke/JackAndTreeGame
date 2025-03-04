@@ -21,6 +21,74 @@ class GameManager
             _window_width = WINDOW_WIDTH;
             _window_height = WINDOW_HEIGHT;
         };
+
+        int InitGameManager(void)
+        {
+            _state = GameState::TITLE;
+            return 0;
+        }
+
+        GameState UpdateInput(SDL_Event *event)
+        {
+            if(_state == GameState::TITLE)
+            {
+                /* "Press Any Button To Start"を実装 */
+                if(event->type == SDL_EVENT_KEY_DOWN)
+                {
+                    _state = GameState::PLAY;
+                }
+            }
+            else if(_state == GameState::PLAY)
+            {
+                if(event->type == SDL_EVENT_KEY_DOWN)
+                {
+                    switch(event->key.scancode)
+                    {
+                        case SDL_SCANCODE_P:
+                            _state = GameState::PAUSE;
+                            break;
+                    }
+                }
+            }
+            else if(_state == GameState::PAUSE)
+            {
+                if(event->type == SDL_EVENT_KEY_DOWN)
+                {
+                    switch(event->key.scancode)
+                    {
+                        case SDL_SCANCODE_P:
+                            _state = GameState::PLAY;
+                            break;
+                        case SDL_SCANCODE_ESCAPE:
+                            _state = GameState::EXIT;
+                            break;
+                    }
+                }
+            }
+            else if(_state == GameState::GAMEOVER)
+            {
+                if(event->type == SDL_EVENT_KEY_DOWN)
+                {
+                    switch(event->key.scancode)
+                    {
+                        case SDL_SCANCODE_SPACE:
+                            _state = GameState::PLAY;
+                            break;
+                        case SDL_SCANCODE_ESCAPE:
+                            _state = GameState::EXIT;
+                            break;
+                    }
+                }
+            }
+
+
+            return _state;
+        }
+        void CallGameOver(void)
+        {
+            _state = GameState::GAMEOVER;
+        }
+
         GameState GetState(void) const { return _state; }
         string GetTitle(void) const { return _title; }
         string GetVersion(void) const { return _version; }
