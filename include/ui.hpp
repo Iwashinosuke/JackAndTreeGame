@@ -7,14 +7,25 @@
 
 using namespace UIParam;
 
+typedef class UIBase UIBase;    
 typedef class TitleUI TitleUI;
 typedef class GameUI GameUI;
+typedef class PauseUI PauseUI;
+typedef class GameOverUI GameOverUI;
 
 
 extern TitleUI titleUi;
 extern GameUI gameUi;
+extern PauseUI pauseUi;
+extern GameOverUI gameOverUi;
 
-class TitleUI
+class UIBase
+{
+    public:
+        virtual void UpdateRender(SDL_Window *window, SDL_Renderer *renderer){}
+};
+
+class TitleUI : public UIBase
 {
     public:
         TitleUI(void)
@@ -22,7 +33,7 @@ class TitleUI
 
         }
 
-        void UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
+        void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
             SDL_FRect rect;
             rect.x = 0;
@@ -36,7 +47,7 @@ class TitleUI
 
 };  
 
-class GameUI
+class GameUI : public UIBase
 {
     public:
         GameUI(void)
@@ -44,7 +55,7 @@ class GameUI
 
         }
 
-        void UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
+        void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
             SDL_SetRenderDrawColor(renderer, 100, 100, 100, 100);
@@ -73,14 +84,14 @@ class GameUI
 
             SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
-            SDL_SetRenderScale(renderer, 1.5f, 1.5f);
-            SDL_SetRenderDrawColor(renderer, 10, 10, 10, SDL_ALPHA_OPAQUE); 
-            SDL_RenderDebugTextFormat(renderer, 10, 30, "score x y %" SDL_PRIu64 " %" SDL_PRIu64, (Uint64)score_text_x, (Uint64)score_text_y);
-            SDL_RenderDebugTextFormat(renderer, score_text_x, score_text_y , "SCORE: %" SDL_PRIs32 , 100000);
-            SDL_SetRenderScale(renderer, 2.0f, 2.0f);
-            SDL_RenderDebugTextFormat(renderer, 10, 200, "Press SPACE to jump");
-            SDL_RenderDebugTextFormat(renderer, info_text_x, info_text_y, "Press SPACE to jump");
-            SDL_SetRenderScale(renderer, 1.0f, 1.0f);
+            // SDL_SetRenderScale(renderer, 1.5f, 1.5f);
+            // SDL_SetRenderDrawColor(renderer, 10, 10, 10, SDL_ALPHA_OPAQUE); 
+            // SDL_RenderDebugTextFormat(renderer, 10, 30, "score x y %" SDL_PRIu64 " %" SDL_PRIu64, (Uint64)score_text_x, (Uint64)score_text_y);
+            // SDL_RenderDebugTextFormat(renderer, score_text_x, score_text_y , "SCORE: %" SDL_PRIs32 , 100000);
+            // SDL_SetRenderScale(renderer, 2.0f, 2.0f);
+            // SDL_RenderDebugTextFormat(renderer, 10, 200, "Press SPACE to jump");
+            // SDL_RenderDebugTextFormat(renderer, info_text_x, info_text_y, "Press SPACE to jump");
+            // SDL_SetRenderScale(renderer, 1.0f, 1.0f);
         }
     private:
         const Uint64 score = 0;
@@ -88,6 +99,50 @@ class GameUI
         const float score_text_y = Game::WINDOW_Y + Game::WINDOW_HEIGHT / 3;
         const float info_text_x = Game::WINDOW_X + Game::WINDOW_WIDTH / 2 - 100;
         const float info_text_y = Game::WINDOW_Y + Game::WINDOW_HEIGHT / 3 + 50;    
+};
+
+class PauseUI : public UIBase
+{
+    public:
+        PauseUI(void)
+        {
+
+        }
+
+        void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
+        {
+            SDL_FRect rect;
+            rect.x = 0;
+            rect.y = 0;
+            rect.w = GameManagerParam::WINDOW_WIDTH;
+            rect.h = GameManagerParam::WINDOW_HEIGHT;
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+            SDL_RenderRect(renderer, &rect); 
+        }
+    private:    
+
+};
+
+class GameOverUI : public UIBase
+{
+    public:
+        GameOverUI(void)
+        {
+
+        }
+
+        void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
+        {
+            SDL_FRect rect;
+            rect.x = 0;
+            rect.y = 0;
+            rect.w = GameManagerParam::WINDOW_WIDTH;
+            rect.h = GameManagerParam::WINDOW_HEIGHT;
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+            SDL_RenderRect(renderer, &rect); 
+        }
+    private:    
+
 };
 
 #endif // UI_HPP
