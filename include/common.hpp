@@ -1,9 +1,17 @@
+/*** -注 common.hpp内で他の変数の値を用いて定義する場合、初期化順序が保証されてないことに注意 ***/
+
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_image/SDL_image.h>
 #include <string>
 using std::string;
+
+// #define SDL_TTF_MAJOR_VERSION                                                                                                              // Printable format: "%d.%d.%d", MAJOR, MINOR, MICRO
+// #define SDL_TTF_VERSION                                                                                                                    // This is the version number macro for the current SDL_ttf version.
+// #define SDL_TTF_VERSION_ATLEAST(X, Y, Z)  
 
 namespace GameManagerParam
 {
@@ -17,45 +25,50 @@ namespace GameManagerParam
         GAMEOVER,
         EXIT
     };
-    const string GAME_TITLE = "Mono Jumper";
-    const string GAME_VERSION = "0.1";
-    constexpr Uint16 WINDOW_WIDTH = 600;
-    constexpr Uint16 WINDOW_HEIGHT = 800;
-    constexpr Uint64 TARGET_FPS_NANO_SEC = 16666667; // 60fps ~= 16666667ns
+    inline const string GAME_TITLE = "Mono Jumper";
+    inline const string GAME_VERSION = "0.1";
+    inline constexpr Uint16 WINDOW_WIDTH = 600;
+    inline constexpr Uint16 WINDOW_HEIGHT = 800;
+    inline constexpr Uint64 TARGET_FPS = 60; // 60fps, 変更時はTARGET_FPS_NANO_SECも変更
+    inline constexpr Uint64 TARGET_FPS_NANO_SEC = 16666667; // 60fps ~= 16666667ns
 }
 
 namespace PlayerParam
 {
-    constexpr float MAX_HEIGHT = 100.0f;
-    constexpr float GRAVITY = 25.0f;
-    constexpr float JUMP_POWER = 100.0f;
-    constexpr float MAX_DX = 10.0f;
-    constexpr float AX = 2.0f;
+    inline constexpr float MAX_CHARGE_TIME = 2.0f; // FPS準拠、大体の時間
+    inline constexpr float CHARGE_ADDR = 1 / (MAX_CHARGE_TIME * GameManagerParam::TARGET_FPS);
+    inline constexpr float MAX_JUMP_HEIGHT = 100.0f;
+    inline constexpr float MAX_JUMP_POWER = 20.0f;
+    inline constexpr float JUMP_POWER_LOSS = 1.0f;
+    inline constexpr float MAX_FALL_POWER = 10.0f;
+    inline constexpr float FALL_POWER_ADDR = 0.5f;
+    inline constexpr float MAX_DX = 10.0f;
 }
 
 namespace StageParam
 {
-    constexpr int WIDTH = 600;
-    constexpr int HEIGHT = 800;
-    constexpr int BLOCK_SIZE = 10;
+    inline constexpr int WIDTH = 600;
+    inline constexpr int HEIGHT = 800;
+    inline constexpr int BLOCK_SIZE = 10;
 }
 
 namespace UIParam
 {
     namespace Title
     {
-        constexpr int FONT_SIZE = 50;
+        inline constexpr int FONT_SIZE = 50;
     }
 
     namespace Game
     {
         // constexpr float FONT_SIZE = 20.0f;
-        constexpr int FONT_COLOR = 0;
-        Uint16 WINDOW_X = 0;
-        Uint16 WINDOW_Y = GameManagerParam::WINDOW_HEIGHT - 150;
-        Uint16 WINDOW_WIDTH = GameManagerParam::WINDOW_WIDTH;
-        Uint16 WINDOW_HEIGHT = 150;        
+        inline constexpr int FONT_COLOR = 0;
+        inline constexpr Uint16 WINDOW_X = 0;
+        inline constexpr Uint16 WINDOW_Y = GameManagerParam::WINDOW_HEIGHT - 150;
+        inline constexpr Uint16 WINDOW_WIDTH = GameManagerParam::WINDOW_WIDTH;
+        inline constexpr Uint16 WINDOW_HEIGHT = 150;        
     }
 }
+
 
 #endif // COMMON_HPP

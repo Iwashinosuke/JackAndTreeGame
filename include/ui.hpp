@@ -1,9 +1,9 @@
 #ifndef UI_HPP
 #define UI_HPP
 
-#include <SDL3/SDL.h>
 #include "common.hpp"
 #include "utility.hpp"
+
 
 using namespace UIParam;
 

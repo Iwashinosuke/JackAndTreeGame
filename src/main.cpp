@@ -79,7 +79,11 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
     SDL_RenderFillRect(renderer, &rect); 
-    
+ 
+    // TTF_Font *font = TTF_OpenFont("../res/font/8bitOperatorPlusSC-Bold.ttf", 20);
+    // SDL_Color color = {55, 255, 255};
+    // SDL_Surface *text1 = TTF_RenderText_Solid(font, "Hello, World!", 14 , color);
+
     SDL_FRect rect2;
     float rect2_size = 80;
     rect2.x = GameManagerParam::WINDOW_WIDTH / 3;
@@ -102,6 +106,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderDebugTextFormat(renderer, 10, 10, "FPS: %" SDL_PRIu64 , CalcFps());
     SDL_RenderDebugTextFormat(renderer, 10, 20, "centerX: %" SDL_PRIs32 , player.GetFootCenterX());
     SDL_RenderDebugTextFormat(renderer, 10, 30, "centerY: %" SDL_PRIs32 , player.GetFootCenterY());
+    SDL_RenderDebugTextFormat(renderer, 10, 40, "charge level: %f" , player.GetChargeLevel());
     
     /* 描画 */
     SDL_RenderPresent(renderer);  
