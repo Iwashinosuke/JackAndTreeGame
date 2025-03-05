@@ -1,3 +1,6 @@
+#include "../include/player.hpp" // playerを使用
+#include "../include/game_manager.hpp" // game_managerを使用
+
 #include "../include/stage.hpp"
 
 // コンストラクタ
@@ -64,11 +67,21 @@ void StageAuto::render(SDL_Renderer* renderer) {
     // 各障害物を描画（障害物の底部が _groundY に揃う）
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     for (const auto& obs : _obstacles) {
-        for (int i = 0; i < obs.rowCount; ++i) {
-            for (int j = 0; j < obs.colCount; ++j) {
-                SDL_FRect rectF = { obs.x + j * _params.blockWidth, _groundY - (i+1) * _params.blockWidth, _params.blockWidth, _params.blockWidth };
-                SDL_RenderFillRect(renderer, &rectF);
-            }
+        /* 最適化 */
+        SDL_FRect rectF = { obs.x, _groundY - obs.rowCount * _params.blockWidth, obs.colCount * _params.blockWidth, obs.rowCount * _params.blockWidth };
+        SDL_RenderFillRect(renderer, &rectF);
+        /* 衝突判定 */
+        if(player.CheckConflictFRect(&rectF))
+        {
+            game_manager.CallGameOver();
+            return;
         }
+
+        // for (int i = 0; i < obs.rowCount; ++i) {
+        //     for (int j = 0; j < obs.colCount; ++j) {
+        //         SDL_FRect rectF = { obs.x + j * _params.blockWidth, _groundY - (i+1) * _params.blockWidth, _params.blockWidth, _params.blockWidth };
+        //         SDL_RenderFillRect(renderer, &rectF);
+        //     }
+        // }
     }
 }

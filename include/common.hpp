@@ -10,6 +10,10 @@
 #include <string>
 using std::string;
 
+//デバッグ用変数群
+extern Uint64 conflict_check_cnt;
+extern Uint64 valid_conflict_check_cnt;
+
 namespace GameManagerParam
 {
     enum GameState

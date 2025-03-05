@@ -118,7 +118,7 @@ class GameOverUI : public UIBase
             SDL_SetRenderDrawColor(renderer, 200, 0, 0, SDL_ALPHA_OPAQUE); 
             SDL_RenderDebugText(renderer, 40, GameManagerParam::WINDOW_HEIGHT/10, "GAME OVER");
             SDL_SetRenderScale(renderer, 1.5f, 1.5f);
-            SDL_RenderDebugText(renderer, GameManagerParam::WINDOW_WIDTH/5, GameManagerParam::WINDOW_HEIGHT/5+80, "Press Space to Restart");
+            SDL_RenderDebugText(renderer, GameManagerParam::WINDOW_WIDTH/5, GameManagerParam::WINDOW_HEIGHT/5+80, "Press P to Restart");
         }        
 };
 

@@ -51,8 +51,6 @@ int Player::StartPlay(bool reset, Uint16 window_foot_center_y)
     {
         _foot_center_x = GameManagerParam::WINDOW_WIDTH / 3;
         _foot_center_y = window_foot_center_y;
-        _sprite_x = 0.0f;
-        _sprite_y = 0.0f;
         _dx = 0.0f;
         _dy = 0.0f;
         _charge_level = 0.0f;
@@ -195,7 +193,7 @@ PlayerState Player::UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
 
         /* y軸アップデート */
         _foot_center_y += _force_y;
-        if(_foot_center_y < GameManagerParam::WINDOW_HEIGHT / 2 || _sprite_x > GameManagerParam::WINDOW_WIDTH /3 *2) //床に着いたかの判定
+        if(_foot_center_y < GameManagerParam::WINDOW_HEIGHT / 2) //床に着いたかの判定
         {
             if(_force_y < 0)
             {
@@ -218,14 +216,7 @@ PlayerState Player::UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
         //省略
 
         /* ゲームオーバー判定 */
-        if(_foot_center_y > GameManagerParam::WINDOW_HEIGHT / 3 * 2)
-        {
-            _foot_center_y = GameManagerParam::WINDOW_HEIGHT / 3 * 2;
-            _force_y = 0.0f;
-            _jumping = false;
-            _state = PlayerState::GAMEOVER;
-            goto LABEL_RENDER;
-        }        
+        //省略
 
         /* x軸アップデート */
         // if(_jumping) _foot_center_x += _dx;
@@ -250,10 +241,18 @@ PlayerState Player::UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
         _dx = 0;
     }
 
-    /* 描画 */
-    LABEL_RENDER:
-    Uint8 sn = GetCurrentSpriteNum();
+    
+    Render(renderer);
 
+
+
+    return _state;
+}
+
+/* 描画 */
+void Player::Render(SDL_Renderer *renderer)
+{
+    Uint8 sn = GetCurrentSpriteNum();
     SDL_FRect dst_rect;
     SDL_Texture *target_sprite = _sprites[sn];
     Uint16 sprite_w = target_sprite->w / 2;
@@ -262,15 +261,16 @@ PlayerState Player::UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
     dst_rect.y = _foot_center_y - 170;
     dst_rect.w = sprite_w;
     dst_rect.h = sprite_h;
+    _player_sprite_rect = dst_rect;
     SDL_RenderTexture(renderer, target_sprite, NULL, &dst_rect);
-    SDL_RenderRect(renderer, &dst_rect);
+    // SDL_RenderRect(renderer, &dst_rect);
 
     SDL_FRect rect;
     float rect_size = 30;
-    _sprite_x = _foot_center_x - rect_size/2;
-    _sprite_y = _foot_center_y - rect_size;
-    rect.x = _sprite_x;
-    rect.y = _sprite_y;
+    Uint16 sprite_x = _foot_center_x - rect_size/2;
+    Uint16 sprite_y = _foot_center_y - rect_size;
+    rect.x = sprite_x;
+    rect.y = sprite_y;
     rect.w = rect.h = 30;
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -279,6 +279,21 @@ PlayerState Player::UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
     // SDL_RenderRect(renderer, &rect); 
+}
 
-    return _state;
+
+bool Player::CheckConflictFRect(SDL_FRect *rect)
+{
+    conflict_check_cnt++;
+    if(rect->x > GameManagerParam::WINDOW_WIDTH || rect->x + rect->w < 0)
+    {
+        return false;
+    }
+    valid_conflict_check_cnt++;
+    if(IsConflictFRects(&_player_sprite_rect, rect))
+    {
+        _state = PlayerState::GAMEOVER;
+        return true;
+    }
+    return false;
 }

@@ -12,68 +12,17 @@ GameUI gameUi;
 PauseUI pauseUi;
 GameOverUI gameOverUi;
 
+Uint64 score=0;
+
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
 // StageAuto インスタンスを生成（setupStage() により初期化）
 StageAuto stageAuto = setupStage();
 
-/* (cx,cy)を中心として単位時間あたりで点滅するrectを描画します この関数で描画されるrectは、点滅間隔が共有されるため使用法に注意 */
-inline void RenderBlinkRect(SDL_Renderer *renderer, Uint16 cx, Uint16 cy)
-{
-    static Uint64 prevTime;
-    static bool lighting = true;
-    static Uint8 size = 20;
-    Uint64 blink_intensity = 500;
-
-    Uint64 current = SDL_GetTicks();
-    Uint64 elapsed = current - prevTime;
-    if(elapsed > blink_intensity)
-    {
-        lighting = !lighting;
-        prevTime = current;
-    }
-
-    SDL_FRect rect;
-    rect.x = cx - size / 2;
-    rect.y = cy - size / 2;
-    rect.w = size;
-    rect.h = size;
-    if(lighting)
-    {
-        SDL_SetRenderDrawColor(renderer, 255, 150, 50, SDL_ALPHA_OPAQUE);
-    }
-    else
-    {
-        SDL_SetRenderDrawColor(renderer, 200, 100, 10, SDL_ALPHA_OPAQUE);
-    }
-
-    SDL_RenderFillRect(renderer, &rect);
-}
-
-/* (cx,cy)を中心として単位時間あたりで輝くdiamondを描画します この関数で描画される対象は、点滅間隔が共有されるため使用法に注意 */
-inline void RenderRainbowDiamond(SDL_Renderer *renderer, Uint16 cx, Uint16 cy)
-{
-    static Uint8 baseCol;
-    static Uint16 size = 50;
-    static Uint64 rainbow_intensity = 500;
-    SDL_FRect rect;
-    rect.x = cx - size / 2;
-    rect.y = cy - size / 2;
-    rect.w = size;
-    rect.h = size;
-    
-
-
-    for(Uint16 rx=0; rx < size/2; rx++)
-    {
-        SDL_SetRenderDrawColor(renderer, baseCol+rx, baseCol+61+rx, baseCol+101+rx, SDL_ALPHA_OPAQUE);
-        SDL_RenderLine(renderer, cx+rx, -size/2+cy+rx, -size/2+cx+rx, cy+rx);
-    }
-
-    baseCol++;
-}
-
+// デバッグ用変数
+Uint64 conflict_check_cnt = 0;
+Uint64 valid_conflict_check_cnt = 0;
 
 /* 実際のFPSの計算　デバッグ用 */
 Uint64 CalcFps()
@@ -150,6 +99,8 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         if(prevgs == GameManagerParam::GameState::GAMEOVER)
         {
             player.StartPlay(true, GameManagerParam::WINDOW_HEIGHT / 2);
+            score = 0;
+            stageAuto.Reset();
         }
         else
         {
@@ -177,7 +128,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     else
     {
         gameUi.InformCurrentState(gs);
-        gameUi.InformScore(0);
+        gameUi.InformScore(score);
         gameUi.UpdateRender(window,renderer);
         ps  = player.UpdateRender(window,renderer);
     }
@@ -188,6 +139,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         {
             game_manager.CallGameOver();
         }    
+        else score++;
     }
     else if(gs == GameManagerParam::GameState::PAUSE)
     {
@@ -213,15 +165,19 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     CapFrameRate(GameManagerParam::TARGET_FPS_NANO_SEC);
 
     /* (デバッグ)FPS表示 */
-    SDL_SetRenderScale(renderer, 1.0f, 1.0f);
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE); 
-    SDL_RenderDebugTextFormat(renderer, 10, 10, "FPS: %" SDL_PRIu64 , CalcFps());
-    SDL_RenderDebugTextFormat(renderer, 10, 20, "centerX: %" SDL_PRIs32 , player.GetFootCenterX());
-    SDL_RenderDebugTextFormat(renderer, 10, 30, "centerY: %" SDL_PRIs32 , player.GetFootCenterY());
-    SDL_RenderDebugTextFormat(renderer, 10, 40, "charge level: %f" , player.GetChargeLevel());
-    SDL_RenderDebugTextFormat(renderer, 10, 50, "GameState: %d" , game_manager.GetState());
-    SDL_RenderDebugTextFormat(renderer, 10, 60, "PlayerState: %d" , player.GetState());
-    
+    // SDL_SetRenderScale(renderer, 1.0f, 1.0f);
+    // SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE); 
+    // SDL_RenderDebugTextFormat(renderer, 10, 10, "FPS: %" SDL_PRIu64 , CalcFps());
+    // SDL_RenderDebugTextFormat(renderer, 10, 20, "centerX: %" SDL_PRIs32 , player.GetFootCenterX());
+    // SDL_RenderDebugTextFormat(renderer, 10, 30, "centerY: %" SDL_PRIs32 , player.GetFootCenterY());
+    // SDL_RenderDebugTextFormat(renderer, 10, 40, "charge level: %f" , player.GetChargeLevel());
+    // SDL_RenderDebugTextFormat(renderer, 10, 50, "GameState: %d" , game_manager.GetState());
+    // SDL_RenderDebugTextFormat(renderer, 10, 60, "PlayerState: %d" , player.GetState());
+    // SDL_FRect player_sprite_rect = player.GetPlayerSpriteRect();
+    // SDL_RenderDebugTextFormat(renderer, 10, 70, "PlayerSpriteRect: x=%f, y=%f, w=%f, h=%f" , player_sprite_rect.x, player_sprite_rect.y, player_sprite_rect.w, player_sprite_rect.h);
+    // SDL_RenderDebugTextFormat(renderer, 10, 80, "conflict_check_cnt: %" SDL_PRIu64 , conflict_check_cnt);
+    // SDL_RenderDebugTextFormat(renderer, 10, 90, "valid_conflict_check_cnt: %" SDL_PRIu64 , valid_conflict_check_cnt);
+
     /* 描画 */
     SDL_RenderPresent(renderer);  
 

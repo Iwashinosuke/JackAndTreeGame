@@ -35,6 +35,12 @@ public:
     // 次の障害物（足場）を生成する（障害物毎にランダムな生成間隔で生成）
     void generateNextStage();
 
+    /* 障害物初期化 */
+    void Reset()
+    {
+        _obstacles.clear();
+    }
+
 private:
     BlockParams _params;
     float _groundY;   // 地面のY座標

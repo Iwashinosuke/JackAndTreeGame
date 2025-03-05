@@ -62,9 +62,9 @@ RUN cmake ../CMakeLists.txt -B . && \
 
 # Windows向けクロスコンパイル用ライブラリ取得
 WORKDIR /SDL
-RUN wget https://www.libsdl.org/release/SDL3-devel-3.2.6-mingw.zip -O SDL3-mingw.zip && \
+RUN wget https://www.libsdl.org/release/SDL3-devel-3.2.8-mingw.zip -O SDL3-mingw.zip && \
      unzip SDL3-mingw.zip && \
-    mv SDL3-3.2.6/ SDL3-mingw/ && \
+    mv SDL3-3.2.8/ SDL3-mingw/ && \
     cp -r SDL3-mingw/x86_64-w64-mingw32/* /usr/x86_64-w64-mingw32/
 
 RUN wget https://github.com/libsdl-org/SDL_image/releases/download/release-3.2.2/SDL3_image-devel-3.2.2-mingw.zip -O SDL3image-mingw.zip && \

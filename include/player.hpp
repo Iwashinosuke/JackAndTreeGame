@@ -2,6 +2,7 @@
 #define PLAYER_HPP
 
 #include "common.hpp"
+#include "utility.hpp"
 
 using namespace PlayerParam;
 
@@ -17,8 +18,8 @@ class Player
             _state = PlayerState::INIT;
             _foot_center_x = 0;
             _foot_center_y = 0;
-            _sprite_x = 0.0f;
-            _sprite_y = 0.0f;
+            // _sprite_x = 0.0f;
+            // _sprite_y = 0.0f;
             _dx = 0.0f;
             _dy = 0.0f;
             _charge_level = 0.0f;
@@ -29,25 +30,20 @@ class Player
             _jumping = false;
         }
 
-        void SetPosByWindow(Uint16 x, Uint16 y)
-        {
-            _foot_center_x = x;
-            _foot_center_y = y;
-        }
+        bool CheckConflictFRect(SDL_FRect *rect);
+
         int InitPlayer(SDL_Renderer *renderer); 
         int StartPlay(bool reset, Uint16 window_foot_center_y);
         int StopPlay(PlayerState state);
-
         Uint8 GetCurrentSpriteNum(void);
         void UpdateInput(SDL_Event *event);
         PlayerState UpdateRender(SDL_Window *window, SDL_Renderer *renderer);
+        void Render(SDL_Renderer *renderer);
         Uint16 GetFootCenterX(void){ return _foot_center_x; }
         Uint16 GetFootCenterY(void){ return _foot_center_y; }
         float GetChargeLevel(void){ return _charge_level; }
-        float GetSpriteX(void){ return _sprite_x; }
-        float GetSpriteY(void){ return _sprite_y; }
         PlayerState GetState(void) const { return _state; }
-
+        SDL_FRect GetPlayerSpriteRect(void) const { return _player_sprite_rect; }
     private:        
         /* 状態 */
         PlayerState _state;
@@ -68,17 +64,10 @@ class Player
             DAME1,
             DAME2
         };
-        // SDL_Surface *_sprite_idle; // 0 ジャンプなど
-        // SDL_Surface *_sprite_dash1; // 1
-        // SDL_Surface *_sprite_dash2; // 2
-        // SDL_Surface *_sprite_dame1; // 3
-        // SDL_Surface *_sprite_dame2; // 4
-        
 
-        // SDL_Surface *_sprite;
-
-        Uint16 _sprite_x;
-        Uint16 _sprite_y;
+        // Uint16 _sprite_x;
+        // Uint16 _sprite_y;
+        SDL_FRect _player_sprite_rect;
         float _dx;
         float _dy;
         float _charge_level;

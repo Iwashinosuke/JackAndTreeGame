@@ -75,7 +75,7 @@ class GameManager
                 {
                     switch(event->key.scancode)
                     {
-                        case SDL_SCANCODE_SPACE:
+                        case SDL_SCANCODE_P:
                             _state = GameState::PLAY;
                             break;
                         case SDL_SCANCODE_ESCAPE:
