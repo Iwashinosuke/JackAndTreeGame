@@ -275,10 +275,10 @@ PlayerState Player::UpdateRender(SDL_Window *window, SDL_Renderer *renderer)
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, (Uint8)(SDL_ALPHA_OPAQUE*_charge_level)); 
-    SDL_RenderFillRect(renderer, &rect);
+    // SDL_RenderFillRect(renderer, &rect);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);  /* red, full alpha */
-    SDL_RenderRect(renderer, &rect); 
+    // SDL_RenderRect(renderer, &rect); 
 
     return _state;
 }
