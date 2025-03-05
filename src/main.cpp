@@ -1,5 +1,6 @@
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 #include "../include/main.hpp"
+#include "../include/stage.hpp" 
 
 // #include <SDL3_ttf/SDL_ttf.h>
 // #include <SDL3_image/SDL_image.h>
@@ -17,6 +18,10 @@ static SDL_Renderer *renderer = NULL;
 // デモ用
 TTF_Font *font = NULL;
 SDL_Surface *img = NULL;
+
+// StageAuto インスタンスを生成（setupStage() により初期化）
+StageAuto stageAuto = setupStage();
+
 
 /* (cx,cy)を中心として単位時間あたりで点滅するrectを描画します この関数で描画されるrectは、点滅間隔が共有されるため使用法に注意 */
 inline void RenderBlinkRect(SDL_Renderer *renderer, Uint16 cx, Uint16 cy)
@@ -225,7 +230,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     {
         return SDL_APP_SUCCESS;  /* OSに正常終了を報告 */
     }
-
+    
+  // ----- 障害物（足場）の描画と更新 -----
+  if (gs == GameManagerParam::GameState::PLAY) {
+    stageAuto.render(renderer);
+    stageAuto.generateNextStage();
+    }
 
     /*フレームレート制限*/
     CapFrameRate(GameManagerParam::TARGET_FPS_NANO_SEC);
