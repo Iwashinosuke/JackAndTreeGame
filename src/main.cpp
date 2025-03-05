@@ -15,6 +15,9 @@ GameOverUI gameOverUi;
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
+// StageAuto インスタンスを生成（setupStage() により初期化）
+StageAuto stageAuto = setupStage();
+
 /* (cx,cy)を中心として単位時間あたりで点滅するrectを描画します この関数で描画されるrectは、点滅間隔が共有されるため使用法に注意 */
 inline void RenderBlinkRect(SDL_Renderer *renderer, Uint16 cx, Uint16 cy)
 {
