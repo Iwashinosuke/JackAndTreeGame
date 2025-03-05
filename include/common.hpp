@@ -6,6 +6,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3/SDL_surface.h>
 #include <string>
 using std::string;
 
@@ -43,7 +44,7 @@ namespace GameManagerParam
 
 namespace PlayerParam
 {
-    enum class PlayerState
+    enum PlayerState
     {
         INIT,
         PLAY,
@@ -51,12 +52,13 @@ namespace PlayerParam
         GAMEOVER,
         EXIT
     };
-    inline constexpr float MAX_CHARGE_TIME = 1.5f; // FPS準拠、大体の時間
+    inline constexpr float MAX_CHARGE_TIME = 0.8f; // FPS準拠、大体の時間
     inline constexpr float CHARGE_ADDR = 1 / (MAX_CHARGE_TIME * GameManagerParam::TARGET_FPS);
-    inline constexpr float MAX_JUMP_POWER = 20.0f;
+    inline constexpr float MAX_JUMP_POWER = 12.0f;
     inline constexpr float JUMP_POWER_LOSS = 1.0f;
-    inline constexpr float MAX_FALL_POWER = 10.0f;
+    inline constexpr float MAX_FALL_POWER = 14.0f;
     inline constexpr float FALL_POWER_ADDR = 0.5f;
+    inline constexpr float TMP_JUMP_POWER_ADDR = 0.3f;
 }
 
 namespace StageParam

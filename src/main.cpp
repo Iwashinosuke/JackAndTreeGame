@@ -1,8 +1,9 @@
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 #include "../include/main.hpp"
 
-// #include <SDL3_ttf/SDL_ttf.h>
-// #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3/SDL_surface.h>
 
 GameManager game_manager;
 Player player;
@@ -112,8 +113,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     /*プレイヤの初期化*/
     game_manager.InitGameManager();
-    player.InitPlayer();
+    int result = player.InitPlayer(renderer);
     player.StartPlay(true, GameManagerParam::WINDOW_HEIGHT / 2);
+
+    if (result != 0) {
+        SDL_Log("Couldn't initialize player: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
 
     return SDL_APP_CONTINUE; // プログラム続行
 }
@@ -160,19 +166,21 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderClear(renderer);  /* start with a blank canvas. */    
 
     GameManagerParam::GameState gs = game_manager.GetState();
+    PlayerParam::PlayerState ps = PlayerParam::PlayerState::INIT;
     if(gs == GameManagerParam::GameState::TITLE)
     {
         titleUi.UpdateRender(window,renderer);
     }
     else
     {
+        gameUi.InformCurrentState(gs);
+        gameUi.InformScore(0);
         gameUi.UpdateRender(window,renderer);
+        ps  = player.UpdateRender(window,renderer);
     }
 
     if(gs == GameManagerParam::GameState::PLAY)
     {
-        PlayerParam::PlayerState    ps  = player.UpdateRender(window,renderer);
-
         if(ps == PlayerParam::PlayerState::GAMEOVER)
         {
             game_manager.CallGameOver();
@@ -204,6 +212,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderDebugTextFormat(renderer, 10, 30, "centerY: %" SDL_PRIs32 , player.GetFootCenterY());
     SDL_RenderDebugTextFormat(renderer, 10, 40, "charge level: %f" , player.GetChargeLevel());
     SDL_RenderDebugTextFormat(renderer, 10, 50, "GameState: %d" , game_manager.GetState());
+    SDL_RenderDebugTextFormat(renderer, 10, 60, "PlayerState: %d" , player.GetState());
     
     /* 描画 */
     SDL_RenderPresent(renderer);  

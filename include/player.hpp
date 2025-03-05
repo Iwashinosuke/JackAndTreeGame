@@ -34,10 +34,11 @@ class Player
             _foot_center_x = x;
             _foot_center_y = y;
         }
-        int InitPlayer(void); 
+        int InitPlayer(SDL_Renderer *renderer); 
         int StartPlay(bool reset, Uint16 window_foot_center_y);
         int StopPlay(PlayerState state);
 
+        Uint8 GetCurrentSpriteNum(void);
         void UpdateInput(SDL_Event *event);
         PlayerState UpdateRender(SDL_Window *window, SDL_Renderer *renderer);
         Uint16 GetFootCenterX(void){ return _foot_center_x; }
@@ -45,7 +46,7 @@ class Player
         float GetChargeLevel(void){ return _charge_level; }
         float GetSpriteX(void){ return _sprite_x; }
         float GetSpriteY(void){ return _sprite_y; }
-        PlayerState GetState(void){ return _state; }
+        PlayerState GetState(void) const { return _state; }
 
     private:        
         /* 状態 */
@@ -57,6 +58,25 @@ class Player
         Uint16 _prev_foot_center_y;
 
         /* グラフィック・基本物理 */
+        Uint8 _sprite_cnt = 5;
+        SDL_Texture **_sprites;
+        enum SpriteNum
+        {
+            IDLE,
+            DASH1,
+            DASH2,
+            DAME1,
+            DAME2
+        };
+        // SDL_Surface *_sprite_idle; // 0 ジャンプなど
+        // SDL_Surface *_sprite_dash1; // 1
+        // SDL_Surface *_sprite_dash2; // 2
+        // SDL_Surface *_sprite_dame1; // 3
+        // SDL_Surface *_sprite_dame2; // 4
+        
+
+        // SDL_Surface *_sprite;
+
         Uint16 _sprite_x;
         Uint16 _sprite_y;
         float _dx;
@@ -68,8 +88,8 @@ class Player
 
         /* ステージのための変数 */
         Uint64 _stage_foot_center_y; // ステージ上での足元のy座標
-        Uint8 _left_edge = 0;
-        Uint16 _right_edge = (Uint16)600;
+        Uint16 _left_edge = (Uint16) 150;
+        Uint16 _right_edge = (Uint16)300;
 
         /* キー */
         bool _left_key;
