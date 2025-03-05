@@ -5,12 +5,11 @@
 
 inline void MYDL_RenderBoldLineRect(SDL_Renderer *renderer, float x, float y, float w, float h, float thickness);
 inline bool IsConflictRectAndPoint(float x1, float y1, float w1, float h1, float x2, float y2);
+inline bool IsConflictRectAndRect(float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2);
 
 /* (x,y)を左上頂点とする太線のrectを描画します */
 inline void MYDL_RenderBoldLineRect(SDL_Renderer *renderer, float x, float y, float w, float h, float thickness)
 {
-    
-
     SDL_FRect rects[4];
 
     rects[0].x = x;
@@ -40,6 +39,16 @@ inline void MYDL_RenderBoldLineRect(SDL_Renderer *renderer, float x, float y, fl
 inline bool IsConflictRectAndPoint(float x1, float y1, float w1, float h1, float x2, float y2)
 {
     if(x1 < x2 && x2 < x1 + w1 && y1 < y2 && y2 < y1 + h1)
+    {
+        return true;
+    }
+    return false;
+}
+
+/* rectとrectの衝突判定 */
+inline bool IsConflictRectAndRect(float x1, float y1, float w1, float h1, float x2, float y2, float w2, float h2)
+{
+    if(x1 < x2 + w2 && x2 < x1 + w1 && y1 < y2 + h2 && y2 < y1 + h1)
     {
         return true;
     }

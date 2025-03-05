@@ -28,11 +28,6 @@ class UIBase
 class TitleUI : public UIBase
 {
     public:
-        TitleUI(void)
-        {
-            
-        }
-
         void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
             SDL_SetRenderScale(renderer, 4.0f, 4.0f);
@@ -49,11 +44,6 @@ class TitleUI : public UIBase
 class GameUI : public UIBase
 {
     public:
-        GameUI(void)
-        {
-
-        }
-
         void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
             SDL_SetRenderDrawColor(renderer, 200, 200, 200, SDL_ALPHA_OPAQUE);
@@ -65,53 +55,51 @@ class GameUI : public UIBase
             rect1.h = Game::WINDOW_HEIGHT;
             SDL_RenderFillRect(renderer, &rect1); 
 
-            SDL_SetRenderDrawColor(renderer, 80, 80, 80, SDL_ALPHA_OPAQUE);
+            SDL_SetRenderDrawColor(renderer, 180, 180, 180, SDL_ALPHA_OPAQUE);
             
             MYDL_RenderBoldLineRect(renderer, Game::WINDOW_X, Game::WINDOW_Y, Game::WINDOW_WIDTH, Game::WINDOW_HEIGHT, 10);
             MYDL_RenderBoldLineRect(renderer, Game::WINDOW_X+15, Game::WINDOW_Y+15, Game::WINDOW_WIDTH-30, Game::WINDOW_HEIGHT-30, 8);
+        
+            SDL_SetRenderScale(renderer, 1.8f, 1.8f);           
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+            SDL_RenderDebugTextFormat(renderer, 130,390, "SCORE: %" SDL_PRIu64, score);
+            SDL_SetRenderScale(renderer, 1.4f, 1.4f); 
+            SDL_RenderDebugText(renderer, 150, 520, "Press P to Pause");
         }
     private:
-        const Uint64 score = 0;
-        const float score_text_x = Game::WINDOW_X + Game::WINDOW_WIDTH / 2 - 50;
-        const float score_text_y = Game::WINDOW_Y + Game::WINDOW_HEIGHT / 3;
-        const float info_text_x = Game::WINDOW_X + Game::WINDOW_WIDTH / 2 - 100;
-        const float info_text_y = Game::WINDOW_Y + Game::WINDOW_HEIGHT / 3 + 50;    
+        Uint64 score = 0;  
 };
 
 class PauseUI : public UIBase
 {
     public:
-        PauseUI(void)
-        {
-
-        }
-
         void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
             SDL_SetRenderScale(renderer, 2.0f, 2.0f);
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); 
-            SDL_RenderDebugText(renderer, 33, GameManagerParam::WINDOW_HEIGHT/5, "PAUSE");
+            SDL_RenderDebugText(renderer, GameManagerParam::WINDOW_WIDTH/5+6, GameManagerParam::WINDOW_HEIGHT/5, "PAUSE");
+            SDL_SetRenderScale(renderer, 1.5f, 1.5f);
+            SDL_RenderDebugText(renderer, GameManagerParam::WINDOW_WIDTH/5+2, GameManagerParam::WINDOW_HEIGHT/5+80, "Press P to Resume");
+
+            SDL_SetRenderScale(renderer, 1.8f, 1.8f);           
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+            SDL_RenderDebugTextFormat(renderer, 130,390, "SCORE: %" SDL_PRIu64, score);
+            SDL_SetRenderScale(renderer, 1.4f, 1.4f); 
+            SDL_RenderDebugText(renderer, 130, 390, "Press P to Pause");
         }
     private:    
-
+        Uint64 score = 0;
 };
 
 class GameOverUI : public UIBase
 {
     public:
-        GameOverUI(void)
-        {
-            
-        }
-
         void UpdateRender(SDL_Window *window, SDL_Renderer *renderer) override
         {
             SDL_SetRenderScale(renderer, 4.0f, 4.0f);
             SDL_SetRenderDrawColor(renderer, 200, 0, 0, SDL_ALPHA_OPAQUE); 
-            SDL_RenderDebugText(renderer, 33, GameManagerParam::WINDOW_HEIGHT/10, "GAME OVER");
-        }
-    private:    
-        
+            SDL_RenderDebugText(renderer, 40, GameManagerParam::WINDOW_HEIGHT/10, "GAME OVER");
+        }        
 };
 
 #endif // UI_HPP

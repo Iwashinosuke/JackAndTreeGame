@@ -57,7 +57,6 @@ namespace PlayerParam
     inline constexpr float JUMP_POWER_LOSS = 1.0f;
     inline constexpr float MAX_FALL_POWER = 10.0f;
     inline constexpr float FALL_POWER_ADDR = 0.5f;
-    inline constexpr float MAX_JUMP_HEIGHT = 100.0f;
 }
 
 namespace StageParam
