@@ -203,6 +203,11 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         return SDL_APP_SUCCESS;  /* OSに正常終了を報告 */
     }
 
+    // ----- 障害物（足場）の描画と更新 -----
+    if (gs == GameManagerParam::GameState::PLAY) {
+        stageAuto.render(renderer);
+        stageAuto.generateNextStage();
+        }
 
     /*フレームレート制限*/
     CapFrameRate(GameManagerParam::TARGET_FPS_NANO_SEC);
